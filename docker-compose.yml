@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  nn_trainer:
+    build: .
+    container_name: neuralforge-trainer
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+      - ./config:/app/config
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CUDA_VISIBLE_DEVICES=0
+    working_dir: /app
+    command: python scripts/train.py --config config/default.yaml
+
+  nn_api:
+    build: .
+    container_name: neuralforge-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./results/models:/app/results/models:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+    working_dir: /app
+    command: uvicorn src.neuralforge.api.app:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      - nn_trainer
