@@ -57,10 +57,10 @@ monitoring = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/neuralforge"
-Documentation = "https://github.com/yourusername/neuralforge/tree/main/docs"
-Repository = "https://github.com/yourusername/neuralforge.git"
-Issues = "https://github.com/yourusername/neuralforge/issues"
+Homepage = "https://github.com/Arif-Badhon/neuralforge"
+Documentation = "https://github.com/Arif-Badhon/neuralforge/tree/main/docs"
+Repository = "https://github.com/Arif-Badhon/neuralforge.git"
+Issues = "https://github.com/Arif-Badhon/neuralforge/issues"
 
 [build-system]
 requires = ["setuptools>=68.0", "wheel"]
