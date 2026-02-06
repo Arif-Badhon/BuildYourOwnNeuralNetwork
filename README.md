@@ -74,7 +74,30 @@ print(f"a.grad: {a.grad}")  # Should match b.data
 print(f"b.grad: {b.grad}")  # Should match a.data
 ```
 
-### 2. Building a Simple Neural Network (Planned)
+### 2. Recurrent Neural Networks (RNN)
+
+NeuralForge includes a vanilla `RNN` module to demonstrate sequence modeling.
+
+```python
+from neuralforge.nn.rnn import RNN
+from neuralforge.core import Tensor
+
+# Input: Sequence of Tensors (batch_size, input_size)
+x1 = Tensor([[1.0, 0.0], [0.0, 1.0]], requires_grad=True)
+x2 = Tensor([[0.0, 1.0], [1.0, 0.0]], requires_grad=True)
+inputs = [x1, x2]
+
+# Initialize RNN
+rnn = RNN(input_size=2, hidden_size=4)
+
+# Forward pass (Unrolling loop)
+hidden_states, final_hidden = rnn(inputs)
+
+# Backpropagate through time
+final_hidden.sum().backward()
+```
+
+### 3. Building a Simple Neural Network (Planned)
 
 *Note: The `nn` module is currently under active development. Below is a preview of the API design.*
 

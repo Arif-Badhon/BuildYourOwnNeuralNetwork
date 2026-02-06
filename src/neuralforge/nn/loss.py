@@ -15,12 +15,9 @@ def mse_loss(predictions: Tensor, targets: Tensor) -> Tensor:
 
 def cross_entropy_loss(logits: Tensor, targets: Tensor) -> Tensor:
     """Cross Entropy Loss for classification."""
-    probs = logits.softmax(dim=-1)
+    probs = logits.softmax(axis=-1)
     eps = 1e-7
-    probs_clamped = Tensor(
-        np.clip(probs.data, eps, 1.0),
-        requires_grad=False
-    )
+    probs_clamped = probs.clip(eps, 1.0)
     log_probs = probs_clamped.log()
     loss = -(targets * log_probs).sum()
     batch_size = targets.shape[0]

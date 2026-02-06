@@ -421,6 +421,68 @@ class Tensor:
         out._backward = _backward
         return out
     
+    def log(self) -> "Tensor":
+        """
+        Natural logarithm: log(x)
+        
+        GRADIENT: d/dx = 1/x
+        """
+        out = Tensor(
+            np.log(self.data),
+            requires_grad=self.requires_grad,
+            _children=(self,),
+            _op="log"
+        )
+        
+        def _backward():
+            if self.requires_grad:
+                self.grad = (self.grad if self.grad is not None else 0) + out.grad / self.data
+        
+        out._backward = _backward
+        return out
+
+    def abs(self) -> "Tensor":
+        """
+        Absolute value: |x|
+        
+        GRADIENT: d/dx = x/|x| (sign of x)
+        """
+        out = Tensor(
+            np.abs(self.data),
+            requires_grad=self.requires_grad,
+            _children=(self,),
+            _op="abs"
+        )
+        
+        def _backward():
+            if self.requires_grad:
+                mask = np.sign(self.data)
+                self.grad = (self.grad if self.grad is not None else 0) + out.grad * mask
+        
+        out._backward = _backward
+        return out
+
+    def clip(self, min_val: float, max_val: float) -> "Tensor":
+        """
+        Clip values to [min_val, max_val].
+        
+        GRADIENT: 1 if min_val < x < max_val, else 0
+        """
+        out = Tensor(
+            np.clip(self.data, min_val, max_val),
+            requires_grad=self.requires_grad,
+            _children=(self,),
+            _op="clip"
+        )
+        
+        def _backward():
+            if self.requires_grad:
+                mask = ((self.data >= min_val) & (self.data <= max_val)).astype(np.float32)
+                self.grad = (self.grad if self.grad is not None else 0) + out.grad * mask
+        
+        out._backward = _backward
+        return out
+        
     # ================== REDUCTION OPERATIONS ==================
     
     def sum(self, axis: Optional[int] = None, keepdims: bool = False) -> "Tensor":
